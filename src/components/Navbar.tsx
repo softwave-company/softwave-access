@@ -56,21 +56,6 @@ export default function Navbar() {
               </div>
             </div>
             <div className="flex items-center justify-end pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-              <button className="flex md:hidden">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="#ffffff"
-                  aria-hidden="true"
-                  className="h-7 w-7 text-text-0"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M3 6.75A.75.75 0 0 1 3.75 6h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 6.75ZM3 12a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12Zm0 5.25a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
               <div className="hidden md:flex md:flex-col">
                 <div className="flex gap-2">
                   <Link
