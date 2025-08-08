@@ -94,16 +94,36 @@ export default function Home() {
                             venue={eventOfTheDay.venue}
                             date={eventOfTheDay.date}
                         />
-                        <div className="flex flex-1 flex-col gap-4 md:self-center">
-                            <div className="flex flex-col text-4-xl font-medium xl:gap-2 xl:text-5xl">
+                        <div className="flex flex-1 flex-col gap-4 md:self-center px-4 md:px-0">
+                            <div className="flex flex-col gap-1 text-3xl font-medium md:gap-2 md:text-4xl xl:text-5xl">
                                 <p className="text-white">Suas experiências</p>
-                                <p className="bg-gradient-to-r from-purple-300 via-purple-500 to-purple-600 bg-clip-text text-transparent leading-16">em um só lugar?</p>
+                                <p className="bg-gradient-to-r from-purple-300 via-purple-500 to-purple-600 bg-clip-text text-transparent leading-tight md:leading-snug">
+                                    em um só lugar?
+                                </p>
                                 <p className="text-white">É na Softwave Access.</p>
                             </div>
+
                             <main className="relative flex w-full flex-col gap-2">
-                                <div className="flex h-10 items-center gap-2 rounded-lg bg-white px-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" className="h-6 w-6 text-custom-400"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"></path></svg>
-                                    <input className="h-full w-full bg-transparent outline-none placeholder:text-text-600" placeholder="Pesquise qualquer evento..."></input>
+                                <div className="flex h-12 items-center gap-2 rounded-lg bg-white px-3">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={1.5}
+                                        stroke="currentColor"
+                                        aria-hidden="true"
+                                        className="h-6 w-6 text-custom-400"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                                        />
+                                    </svg>
+                                    <input
+                                        className="h-full w-full bg-transparent outline-none placeholder:text-text-600 text-base md:text-lg"
+                                        placeholder="Pesquise qualquer evento..."
+                                    />
                                 </div>
                             </main>
                         </div>
@@ -119,7 +139,7 @@ export default function Home() {
                         </div>
                     </section>
 
-                    <a className="bg-purple-400 w-[20%] text-center rounded-lg mx-auto py-2 font-bold hover:bg-purple-500 transition-all duration-100 cursor-pointer">Ver todos os eventos</a>
+                    <a className="bg-purple-400 w-[60%] md:w-[20%] text-center rounded-lg mx-auto py-2 font-bold hover:bg-purple-500 transition-all duration-100 cursor-pointer">Ver todos os eventos</a>
 
                     <div className="bg-gradient-to-r from-purple-300 via-purple-500 to-purple-600 h-2"></div>
                 </div>
@@ -133,7 +153,7 @@ export default function Home() {
                 </div>
 
                 {/* Menu de links */}
-                <nav className="mb-6 flex justify-center gap-8 text-sm font-semibold text-white">
+                <nav className="mb-6 flex flex-col items-center gap-4 text-sm font-semibold text-white md:flex-row md:justify-center md:gap-8">
                     <a href="#" className="text-gray-300 hover:text-white">Política de Cookies</a>
                     <a href="#" className="text-gray-300 hover:text-white">Termos de Uso</a>
                     <a href="#" className="text-gray-300 hover:text-white">Política de Privacidade</a>
