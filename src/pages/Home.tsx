@@ -97,10 +97,10 @@ export default function Home() {
                         <div className="flex flex-1 flex-col gap-4 md:self-center px-4 md:px-0">
                             <div className="flex flex-col gap-1 text-3xl font-medium md:gap-2 md:text-4xl xl:text-5xl">
                                 <p className="text-white">Suas experiências</p>
-                                <p className="bg-gradient-to-r from-purple-300 via-purple-500 to-purple-600 bg-clip-text text-transparent leading-tight md:leading-snug">
+                                <p className="text-white">
                                     em um só lugar?
                                 </p>
-                                <p className="text-white">É na Softwave Access.</p>
+                                <p className="bg-gradient-to-r from-purple-300 via-purple-500 to-purple-600 bg-clip-text text-transparent">É na Softwave Access.</p>
                             </div>
 
                             <main className="relative flex w-full flex-col gap-2">
