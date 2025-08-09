@@ -59,7 +59,7 @@ export default function Navbar() {
               <div className="hidden md:flex md:flex-col">
                 <div className="flex gap-2">
                   <Link
-                    to="/"
+                    to="/auth/sign-in"
                     className="flex items-center justify-center rounded-md px-4 py-2 font-semibold transition duration-200 bg-transparent text-white hover:cursor-pointer"
                   >
                     Entrar
