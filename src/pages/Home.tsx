@@ -141,7 +141,7 @@ export default function Home() {
 
                     <a className="bg-purple-400 w-[60%] md:w-[20%] text-center rounded-lg mx-auto py-2 font-bold hover:bg-purple-500 transition-all duration-100 cursor-pointer">Ver todos os eventos</a>
 
-                    <div className="bg-gradient-to-r from-purple-300 via-purple-500 to-purple-600 h-2"></div>
+                    <div className="bg-gradient-to-r from-purple-300 via-purple-500 to-purple-600 h-1"></div>
                 </div>
             </main>
 
