@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import Events from "./pages/Events";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
         <Route path="/about" element={<About />}/>
         <Route path="/events" element={<Events />}/>
         <Route path="/auth/sign-in" element={<Login />}/>
+        <Route path="/auth/sign-up" element={<Signup />}/>
         {/* add new routes here */}
       </Routes>
     </BrowserRouter>

@@ -100,7 +100,7 @@ export default function Login() {
           {/* Link Criar Conta */}
           <p className="text-center text-sm text-gray-400">
             Novo no Access?{" "}
-            <a href="#" className="text-purple-400 hover:underline">
+            <a href="/auth/sign-up" className="text-purple-400 hover:underline">
               Criar Conta
             </a>
           </p>
