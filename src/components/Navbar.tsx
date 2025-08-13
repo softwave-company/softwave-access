@@ -1,9 +1,13 @@
 import { Link, NavLink } from "react-router-dom";
+import { useState } from "react";
 import { useAuth } from '../context/useAuth';
 import accessIcon from "../assets/images/accessIcon.png";
+import testAvatar from '../assets/teste_avatar.jpg'
+import { ChevronDown, User, Edit, LogOut } from "lucide-react";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
     <nav className="bg-[#0d0d13]">
@@ -20,10 +24,9 @@ export default function Navbar() {
                   <NavLink
                     to="/"
                     className={({ isActive }) =>
-                      `font-bold rounded-md px-3 py-2 text-sm ${
-                        isActive
-                          ? "bg-gradient-to-r from-purple-300 via-purple-500 to-purple-600 bg-clip-text text-transparent"
-                          : "text-gray-300 hover:text-white"
+                      `font-bold rounded-md px-3 py-2 text-sm ${isActive
+                        ? "bg-gradient-to-r from-purple-300 via-purple-500 to-purple-600 bg-clip-text text-transparent"
+                        : "text-gray-300 hover:text-white"
                       }`
                     }
                   >
@@ -32,10 +35,9 @@ export default function Navbar() {
                   <NavLink
                     to="/events"
                     className={({ isActive }) =>
-                      `font-bold rounded-md px-3 py-2 text-sm ${
-                        isActive
-                          ? "bg-gradient-to-r from-purple-300 via-purple-500 to-purple-600 bg-clip-text text-transparent"
-                          : "text-gray-300 hover:text-white"
+                      `font-bold rounded-md px-3 py-2 text-sm ${isActive
+                        ? "bg-gradient-to-r from-purple-300 via-purple-500 to-purple-600 bg-clip-text text-transparent"
+                        : "text-gray-300 hover:text-white"
                       }`
                     }
                   >
@@ -44,10 +46,9 @@ export default function Navbar() {
                   <NavLink
                     to="/about"
                     className={({ isActive }) =>
-                      `font-bold rounded-md px-3 py-2 text-sm ${
-                        isActive
-                          ? "bg-gradient-to-r from-purple-300 via-purple-500 to-purple-600 bg-clip-text text-transparent"
-                          : "text-gray-300 hover:text-white"
+                      `font-bold rounded-md px-3 py-2 text-sm ${isActive
+                        ? "bg-gradient-to-r from-purple-300 via-purple-500 to-purple-600 bg-clip-text text-transparent"
+                        : "text-gray-300 hover:text-white"
                       }`
                     }
                   >
@@ -60,16 +61,58 @@ export default function Navbar() {
             <div className="flex items-center justify-end pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
               <div className="hidden md:flex md:flex-col">
                 {user ? (
-                  <div className="flex gap-2 items-center">
-                    <span className="text-white font-semibold">
-                      Olá, {user.nome}
-                    </span>
+                  <div className="relative">
                     <button
-                      onClick={logout}
-                      className="rounded-md px-4 py-2 font-semibold bg-red-500 text-white hover:bg-red-600"
+                      className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition duration-300"
+                      onClick={() => setDropdownOpen(!dropdownOpen)}
                     >
-                      Sair
+                      <div className="flex gap-3 items-center">
+                        <img src={testAvatar} alt="Avatar" className="h-10 rounded-full" />
+                        <div className="flex flex-col">
+                          <p className="text-gray-400 text-sm">Meu perfil</p>
+                          <p className="text-white text-md">{user.nome}</p>
+                        </div>
+                        <ChevronDown className="text-gray-400 w-5 h-5 transition-transform duration-200" style={{ transform: dropdownOpen ? "rotate(180deg)" : "rotate(0deg)" }} />
+                      </div>
                     </button>
+
+                    {/* Dropdown */}
+                    {dropdownOpen && (
+                      <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-700 rounded-lg shadow-lg z-50">
+                        {/* Topo do dropdown com avatar e nome */}
+                        <div className="flex items-center gap-3 px-4 py-3">
+                          <img src={testAvatar} alt="Avatar" className="h-10 w-10 rounded-full" />
+                          <div className="flex flex-col">
+                            <span className="text-black font-bold">{user.nome}</span>
+                          </div>
+                        </div>
+
+                        {/* Opções */}
+                        <Link
+                          to="/profile"
+                          className="flex items-center gap-2 px-4 py-2 text-gray-500 font-semibold text-lg hover:bg-blue-200"
+                        >
+                          <User className="w-4 h-4" />
+                          <span>Minha Conta</span>
+                        </Link>
+
+                        <Link
+                          to="/profile/edit"
+                          className="flex items-center gap-2 px-4 py-2 text-gray-500 font-semibold text-lg hover:bg-blue-200"
+                        >
+                          <Edit className="w-4 h-4" />
+                          <span>Editar Perfil</span>
+                        </Link>
+
+                        <button
+                          onClick={logout}
+                          className="cursor-pointer flex items-center gap-2 w-full text-left px-4 py-2 text-red-500 font-semibold text-lg hover:bg-blue-200"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          <span>Sair</span>
+                        </button>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="flex gap-2">
