@@ -50,6 +50,7 @@ if ($method === 'POST') {
     exit;
   }
 
+  // Verifica se email já existe
   $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
   $stmt->execute([$email]);
   if ($stmt->fetch()) {
@@ -58,20 +59,33 @@ if ($method === 'POST') {
     exit;
   }
 
+  // Criptografa senha
   $hashSenha = password_hash($senha, PASSWORD_DEFAULT);
 
+  // Insere usuário
   $stmt = $pdo->prepare("INSERT INTO users (nome, email, senha) VALUES (?, ?, ?)");
   $result = $stmt->execute([$nome, $email, $hashSenha]);
 
   if ($result) {
-    echo json_encode(['success' => true, 'message' => 'Usuário criado com sucesso']);
+    // Pega o ID do user recém-criado
+    $userId = $pdo->lastInsertId();
+
+    // Busca o usuário completo
+    $stmt = $pdo->prepare("SELECT id, nome, email, cpf, telefone, data_nascimento FROM users WHERE id = ?");
+    $stmt->execute([$userId]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    echo json_encode([
+      'success' => true,
+      'message' => 'Usuário criado com sucesso',
+      'user' => $user
+    ]);
   } else {
     http_response_code(500);
     echo json_encode(['error' => 'Erro ao criar usuário']);
   }
   exit;
 }
-
 
 http_response_code(405);
 echo json_encode(['error' => 'Método não permitido']);

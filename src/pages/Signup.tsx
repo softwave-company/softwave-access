@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import signUpBg from "../assets/images/sign-up-bg.jpg";
 import Footer from "../components/Footer";
+import { useAuth } from "../context/useAuth";
 
 export default function Signup() {
   type Mensagem = {
@@ -19,6 +21,9 @@ export default function Signup() {
   const [confirmSenha, setConfirmSenha] = useState("");
   const [mensagem, setMensagem] = useState<Mensagem>(null);
   const [aceitaTermos, setAceitaTermos] = useState(false);
+  const { login } = useAuth();
+
+  const navigate = useNavigate();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -53,6 +58,8 @@ export default function Signup() {
 
       if (res.ok && data.success) {
         setMensagem({ tipo: "sucesso", texto: data.message });
+        login(data.user);
+        navigate("/");
       } else {
         setMensagem({ tipo: "erro", texto: data.error || "Erro desconhecido" });
       }
@@ -75,13 +82,13 @@ export default function Signup() {
         </div>
 
         {/* Botão Google */}
-        <button className="flex items-center justify-center gap-3 w-full rounded-lg bg-white py-2 font-medium text-black shadow hover:bg-gray-300 transition cursor-pointer font-bold">
+        <button className="flex items-center justify-center gap-3 w-full rounded-lg bg-white py-2 text-black shadow hover:bg-gray-300 transition cursor-pointer font-bold">
           <img
             src="https://www.svgrepo.com/show/475656/google-color.svg"
             alt="Google logo"
             className="h-6 w-6"
           />
-          Entrar com o Google
+          Entrar com o Google (Em breve...)
         </button>
         <p className="text-gray-300 font-semibold">
           Ao continuar com os logins sociais você aceita os{" "}
