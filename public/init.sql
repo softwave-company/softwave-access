@@ -1,0 +1,13 @@
+CREATE DATABASE IF NOT EXISTS softwave_access_db CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE softwave_access_db;
+
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(150) NOT NULL,
+  email VARCHAR(150) NOT NULL UNIQUE,
+  cpf CHAR(11) DEFAULT NULL,
+  telefone VARCHAR(20),
+  data_nascimento DATE DEFAULT NULL,
+  senha VARCHAR(255) NOT NULL,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
