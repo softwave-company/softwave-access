@@ -4,6 +4,7 @@ import About from "./pages/About";
 import Events from "./pages/Events";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import ProfileEdit from "./pages/Profile/Edit";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
         <Route path="/events" element={<Events />}/>
         <Route path="/auth/sign-in" element={<Login />}/>
         <Route path="/auth/sign-up" element={<Signup />}/>
+        <Route path="/profile/edit" element={<ProfileEdit/>}/>
         {/* add new routes here */}
       </Routes>
     </BrowserRouter>
