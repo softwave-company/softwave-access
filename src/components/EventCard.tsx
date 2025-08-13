@@ -84,7 +84,7 @@ export default function EventCard({
 
 
   return (
-    <div className="overflow-hidden w-full transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg">
+    <div className="overflow-hidden cursor-pointer w-full transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg">
       <div className="relative">
         <img
           src={image}
