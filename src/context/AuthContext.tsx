@@ -25,6 +25,7 @@ interface AuthContextType {
   user: AuthUser | null;
   login: (userData: AuthUser) => void;
   logout: () => void;
+  updateUser: () => void;
 }
 
 // Contexto com valor inicial null
@@ -39,6 +40,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(JSON.parse(savedUser));
     }
   }, []);
+
+  const updateUser = () => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser: AuthUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+    }
+  }
 
   const login = async (userData: AuthUser) => {
     let photoURL: string = defaultAvatar;
@@ -67,7 +76,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { Pencil } from "lucide-react";
 
 import defaultAvatar from '../assets/default_avatar.jpg'
+import { useAuth } from "../context/useAuth";
 
 interface ProfileUser {
   id: number;
@@ -16,6 +17,7 @@ interface ProfileUser {
 }
 
 export default function EditableAvatar() {
+  const { updateUser } = useAuth();
   const [user, setUser] = useState<ProfileUser | null>(null);
   const [avatar, setAvatar] = useState<string>(defaultAvatar);
 
@@ -50,6 +52,24 @@ export default function EditableAvatar() {
 
       if (error) throw error;
 
+      let photoURL: string = defaultAvatar;
+
+      try {
+        const { data, error } = await supabase.storage
+          .from("profile-images")
+          .createSignedUrl(`avatars/${user.id}.png`, 7200);
+
+        if (!error && data?.signedUrl) {
+          photoURL = data.signedUrl;
+        }
+
+        const userWithPhoto = { ...user, photoURL };
+        localStorage.setItem("user", JSON.stringify(userWithPhoto));
+        updateUser();
+
+      } catch (err) {
+        console.log("Usuário não tem foto ainda, usando default");
+      }
     } catch (err) {
       console.error("Erro no upload:", err);
       toast.error("Erro ao enviar a imagem.");

@@ -10,7 +10,7 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
-
+  
   return (
     <nav className="bg-[#0d0d13]">
       <div className="container mx-auto px-2 sm:px-6 lg:px-8">
