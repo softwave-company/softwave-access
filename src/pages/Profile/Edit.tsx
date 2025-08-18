@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
+import { toast } from "react-toastify";
 
 import editProfileBg from '../../assets/images/edit-profile-bg.jpg'
 import { Info, ShieldCheck } from "lucide-react";
@@ -11,10 +12,36 @@ export default function ProfileEdit() {
 
     // estados locais para o form
     const [nome, setNome] = useState("");
+    const [id, setId] = useState(0);
     const [email, setEmail] = useState("");
     const [cpf, setCpf] = useState("");
     const [telefone, setTelefone] = useState("");
     const [dataNascimento, setDataNasc] = useState("");
+
+    const [senhaNova, setSenhaNova] = useState("");
+    const [senhaAntiga, setSenhaAntiga] = useState("");
+
+    function formatarCPF(valor: string) {
+        const apenasNumeros = valor.replace(/\D/g, ""); // tira tudo que não é número
+        if (apenasNumeros.length <= 3) return apenasNumeros;
+        if (apenasNumeros.length <= 6) return apenasNumeros.replace(/(\d{3})(\d+)/, "$1.$2");
+        if (apenasNumeros.length <= 9) return apenasNumeros.replace(/(\d{3})(\d{3})(\d+)/, "$1.$2.$3");
+        return apenasNumeros.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, "$1.$2.$3-$4");
+    }
+
+    function formatarTelefone(valor: string) {
+        const apenasNumeros = valor.replace(/\D/g, ""); // tira tudo que não é número
+
+        if (apenasNumeros.length <= 2) return `(${apenasNumeros}`;
+        if (apenasNumeros.length <= 6) return `(${apenasNumeros.slice(0, 2)}) ${apenasNumeros.slice(2)}`;
+        if (apenasNumeros.length <= 10)
+            return `(${apenasNumeros.slice(0, 2)}) ${apenasNumeros.slice(2, 6)}-${apenasNumeros.slice(6)}`;
+
+        // números com 11 dígitos
+        return `(${apenasNumeros.slice(0, 2)}) ${apenasNumeros.slice(2, 7)}-${apenasNumeros.slice(7, 11)}`;
+    }
+
+
 
     useEffect(() => {
         if (user) {
@@ -23,14 +50,70 @@ export default function ProfileEdit() {
             setNome(user.nome || "");
             setTelefone(user.telefone || "");
             setDataNasc(user.data_nascimento || "");
+            setId(user.id || 0);
         }
     }, [user]);
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // Aqui você chamaria sua função de update do user
-        console.log({ email, cpf, telefone, dataNascimento });
-    }
+
+        try {
+            const res = await fetch("/php/userEdit.php", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    id,
+                    nome,
+                    email,
+                    cpf,
+                    telefone,
+                    data_nascimento: dataNascimento,
+                }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) throw new Error(data.message || "Erro ao atualizar perfil");
+
+            toast.success("Perfil atualizado com sucesso!");
+        } catch (err: any) {
+            toast.error(err.message);
+        }
+    };
+
+
+    const handlePasswordUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (!senhaAntiga || !senhaNova) {
+            toast.warning("Preencha a senha antiga e a nova!");
+            return;
+        }
+
+        try {
+            const res = await fetch("/php/auth.php", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    id,
+                    senha_antiga: senhaAntiga,
+                    senha_nova: senhaNova,
+                    action: "passwordUpdate"
+                }),
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message || "Erro ao atualizar a senha");
+
+            toast.success("Senha atualizada com sucesso!");
+            setSenhaAntiga("");
+            setSenhaNova("");
+        } catch (err: any) {
+            toast.error(err.message);
+        }
+    };
 
     return (
         <div className="flex min-h-screen flex-col bg-[#1c1c28]">
@@ -82,8 +165,8 @@ export default function ProfileEdit() {
                             <input
                                 type="text"
                                 placeholder="Digite o CPF..."
-                                value={cpf}
-                                onChange={(e) => setCpf(e.target.value)}
+                                value={formatarCPF(cpf)}
+                                onChange={(e) => setCpf(e.target.value.replace(/\D/g, ""))}
                                 className="text-text-200 flex-1 bg-transparent p-2 font-normal placeholder:text-text-500 placeholder:italic focus:outline-none"
                             />
                         </div>
@@ -100,8 +183,8 @@ export default function ProfileEdit() {
                                 <input
                                     type="tel"
                                     placeholder="Digite o telefone..."
-                                    value={telefone}
-                                    onChange={(e) => setTelefone(e.target.value)}
+                                    value={formatarTelefone(telefone)}
+                                    onChange={(e) => setTelefone(e.target.value.replace(/\D/g, ""))}
                                     className="text-text-200 flex-1 bg-transparent p-2 font-normal placeholder:text-text-500 placeholder:italic focus:outline-none"
                                 />
                             </div>
@@ -132,18 +215,28 @@ export default function ProfileEdit() {
                 </h2>
                 <p className="text-gray-300">Alterar a senha</p>
 
-                <form className="mt-6 flex flex-col gap-5">
+                <form onSubmit={handlePasswordUpdate} className="mt-6 flex flex-col gap-5">
                     <div className="flex flex-col">
                         <label className="font-semibold">Senha antiga <span className="text-red-500">*</span></label>
                         <div className="flex w-full items-center gap-1 rounded-md border bg-[#1c1c2880] bg-opacity-50 transition duration-200 focus-within:border-white focus-within:border-opacity-60 border-[#2e2b47] max-h-10">
-                            <input type="password" placeholder="Digite sua senha antiga..." className="text-text-200 flex flex-1 bg-transparent p-2 font-normal placeholder-text-500 placeholder:italic focus:outline-none" />
+                            <input
+                                type="password"
+                                placeholder="Digite sua senha antiga..."
+                                value={senhaAntiga}
+                                onChange={(e) => setSenhaAntiga(e.target.value)}
+                                className="text-text-200 flex flex-1 bg-transparent p-2 font-normal placeholder-text-500 placeholder:italic focus:outline-none" />
                         </div>
                     </div>
 
                     <div className="flex flex-col">
                         <label className="font-semibold">Senha nova <span className="text-red-500">*</span></label>
                         <div className="flex w-full items-center gap-1 rounded-md border bg-[#1c1c2880] bg-opacity-50 transition duration-200 focus-within:border-white focus-within:border-opacity-60 border-[#2e2b47] max-h-10">
-                            <input type="password" placeholder="Digite sua senha nova..." className="text-text-200 flex flex-1 bg-transparent p-2 font-normal placeholder-text-500 placeholder:italic focus:outline-none" />
+                            <input
+                                type="password"
+                                placeholder="Digite sua senha nova..."
+                                value={senhaNova}
+                                onChange={(e) => setSenhaNova(e.target.value)}
+                                className="text-text-200 flex flex-1 bg-transparent p-2 font-normal placeholder-text-500 placeholder:italic focus:outline-none" />
                         </div>
                     </div>
 

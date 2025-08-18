@@ -5,7 +5,7 @@ import { Mail, Github, Instagram, Facebook } from 'lucide-react';
 export default function Footer() {
   return (
     <footer className="min-h-full pb-4" style={{ backgroundImage: `url(${footerBg})` }}>
-      {/* Logo */}
+      {/* Logo */}  
       <div className="mb-6 flex justify-center items-center gap-2">
         <img src={accessIcon} alt="Access Logo" className="h-20" />
         <p className="font-bold text-xl text-white">Softwave <span className="bg-gradient-to-r from-purple-300 via-purple-500 to-purple-600 bg-clip-text text-transparent">Access</span></p>

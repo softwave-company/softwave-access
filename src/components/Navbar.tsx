@@ -1,13 +1,15 @@
 import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from '../context/useAuth';
+import { useNavigate } from "react-router-dom";
 import accessIcon from "../assets/images/accessIcon.png";
-import testAvatar from '../assets/teste_avatar.jpg'
+import defaultAvatar from '../assets/default_avatar.jpg'
 import { ChevronDown, User, Edit, LogOut, ArrowUpRight } from "lucide-react";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <nav className="bg-[#0d0d13]">
@@ -70,7 +72,7 @@ export default function Navbar() {
                         onClick={() => setDropdownOpen(!dropdownOpen)}
                       >
                         <div className="flex gap-3 items-center">
-                          <img src={testAvatar} alt="Avatar" className="h-10 rounded-full" />
+                          <img src={user.photoURL || defaultAvatar} alt="Avatar" className="h-10 rounded-full" />
                           <div className="flex flex-col">
                             <p className="text-gray-400 text-sm">Meu perfil</p>
                             <p className="text-white text-md">{user.nome}</p>
@@ -84,7 +86,7 @@ export default function Navbar() {
                         <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-700 rounded-lg shadow-lg z-50">
                           {/* Topo do dropdown com avatar e nome */}
                           <div className="flex items-center gap-3 px-4 py-3">
-                            <img src={testAvatar} alt="Avatar" className="h-10 w-10 rounded-full" />
+                            <img src={user.photoURL || defaultAvatar} alt="Avatar" className="h-10 w-10 rounded-full" />
                             <div className="flex flex-col">
                               <span className="text-black font-bold">{user.nome}</span>
                             </div>
@@ -92,7 +94,7 @@ export default function Navbar() {
 
                           {/* Opções */}
                           <Link
-                            to="/profile"
+                            to="/profile/me"
                             className="flex items-center gap-2 px-4 py-2 text-gray-500 font-semibold text-lg hover:bg-blue-200"
                           >
                             <User className="w-4 h-4" />
@@ -108,7 +110,10 @@ export default function Navbar() {
                           </Link>
 
                           <button
-                            onClick={logout}
+                            onClick={() => {
+                              logout()
+                              navigate("/")
+                            }}
                             className="cursor-pointer flex items-center gap-2 w-full text-left px-4 py-2 text-red-500 font-semibold text-lg hover:bg-blue-200"
                           >
                             <LogOut className="w-4 h-4" />

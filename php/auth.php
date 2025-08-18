@@ -87,5 +87,70 @@ if ($method === 'POST') {
   exit;
 }
 
+if ($method === 'PUT') {
+  $data = json_decode(file_get_contents("php://input"), true);
+  $action = $data['action'] ?? '';
+
+  if ($action === 'passwordUpdate') {
+    $userId = $data['id'] ?? null;
+    $senhaAntiga = $data['senha_antiga'] ?? null;
+    $senhaNova = $data['senha_nova'] ?? null;
+
+    if (!$userId || !$senhaAntiga || !$senhaNova) {
+      http_response_code(400);
+      echo json_encode([
+        'success' => false,
+        'message' => 'Campos obrigatórios não preenchidos'
+      ]);
+      exit;
+    }
+
+    // Busca usuário
+    $stmt = $pdo->prepare("SELECT senha FROM users WHERE id = ?");
+    $stmt->execute([$userId]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) {
+      http_response_code(404);
+      echo json_encode([
+        'success' => false,
+        'message' => 'Usuário não encontrado'
+      ]);
+      exit;
+    }
+
+    // Verifica senha antiga
+    if (!password_verify($senhaAntiga, $user['senha'])) {
+      http_response_code(401);
+      echo json_encode([
+        'success' => false,
+        'message' => 'Senha antiga incorreta'
+      ]);
+      exit;
+    }
+
+    // Hash da nova senha
+    $hashNova = password_hash($senhaNova, PASSWORD_DEFAULT);
+
+    // Atualiza senha no banco
+    $stmt = $pdo->prepare("UPDATE users SET senha = ? WHERE id = ?");
+    $stmt->execute([$hashNova, $userId]);
+
+    echo json_encode([
+      'success' => true,
+      'message' => 'Senha atualizada com sucesso'
+    ]);
+    exit;
+  } else {
+    http_response_code(400);
+    echo json_encode([
+      'success' => false,
+      'message' => 'Ação inválida'
+    ]);
+    exit;
+  }
+}
+
+
 http_response_code(405);
 echo json_encode(['error' => 'Método não permitido']);

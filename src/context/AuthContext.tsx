@@ -1,5 +1,8 @@
 import { createContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
+import { supabase } from "../utils/supabase";
+
+import defaultAvatar from '../assets/default_avatar.jpg'
 
 // Props do Provider
 interface AuthProviderProps {
@@ -14,6 +17,7 @@ interface AuthUser {
   cpf: string | null;
   data_nascimento: string | null;
   telefone: string | null;
+  photoURL: string | null;
 }
 
 // Tipo do contexto
@@ -36,9 +40,25 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, []);
 
-  const login = (userData: AuthUser) => {
-    setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
+  const login = async (userData: AuthUser) => {
+    let photoURL: string = defaultAvatar;
+
+    try {
+      const { data, error } = await supabase.storage
+        .from("profile-images")
+        .createSignedUrl(`avatars/${userData.id}.png`, 7200);
+
+      if (!error && data?.signedUrl) {
+        photoURL = data.signedUrl;
+      }
+
+    } catch (err) {
+      console.log("Usuário não tem foto ainda, usando default");
+    }
+
+    const userWithPhoto = { ...userData, photoURL };
+    setUser(userWithPhoto);
+    localStorage.setItem("user", JSON.stringify(userWithPhoto));
   };
 
   const logout = () => {
